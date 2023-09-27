@@ -1,0 +1,24 @@
+<?php
+
+/** @var array $abonents */
+$abonents;
+
+?>
+<table border="1">
+    <tr>
+        <th>Phone number</th>
+        <th>Adress</th>
+        <th>Owner</th>
+        <th>Sum</th>
+        <th>Score</th>
+    </tr>
+    <?php foreach ($abonents as $abonent): ?>
+        <tr>
+            <td><?= $abonent['phone_number']; ?></td>
+            <td><?= $abonent['adress']; ?></td>
+            <td><?= $abonent['owner']; ?></td>
+            <td><?= $abonent['sum']; ?></td>
+            <td><?= $abonent['score']; ?></td>
+        </tr>
+    <?php endforeach; ?>
+</table>

@@ -1,0 +1,54 @@
+<form method="post">
+    <hr>
+    <p>Edit employee information below. Please enter the employee code to edit.</p>
+
+    <label for="editOwner">Owner</label>
+    <input name="editOwner" type="text" id="editOwner">
+    <button type="submit">Find Employee</button>
+</form>
+
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["editOwner"])) {
+    $editOwner = $_POST["editOwner"];
+    $employeeToEdit = findAnEmployeeByCode($abonents, $editOwner);
+
+    if ($employeeToEdit) {
+        ?>
+        <form method="post">
+            <input type="hidden" name="editOwner" value="<?= $editOwner; ?>">
+            <label for="editPhoneNumber">Phone number</label>
+            <input name="editPhoneNumber" type="text" id="editPhoneNumber" value="<?= $employeeToEdit['phone_number']; ?>">
+            <br>
+            <label for="editAdress">Adress</label>
+            <input name="editAdress" type="text" id="editAdress" value="<?= $employeeToEdit['adress']; ?>">
+            <br>
+            <label for="editOwner">Owner</label>
+            <input name="editOwner" type="text" id="editOwner" value="<?= $employeeToEdit['owner']; ?>">
+            <br>
+            <label for="editSum">Sum</label>
+            <input name="editSum" type="text" id="editSum" value="<?= $employeeToEdit['sum']; ?>">
+            <br>
+            <label for="editScore">Score</label>
+            <input name="editScore" type="text" id="editScore" value="<?= $employeeToEdit['score']; ?>">
+            <br />
+            <br />
+            <button type="submit">Save Changes</button>
+        </form>
+        <?php
+    } else {
+        $error_message =  "Employee not found with code: $editOwner";
+    }
+}
+
+
+function findAnEmployeeByCode($array, $phone_number)
+{
+    foreach ($array as $employee) {
+
+        if (isset($employee['phone_number']) && $employee['phone_number'] == $phone_number) {
+            return $employee;
+        }
+    }
+    return false;
+}   
+?>
