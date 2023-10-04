@@ -1,6 +1,6 @@
 <form method="post">
     <hr>
-    <p>Edit employee information below. Please enter the employee code to edit.</p>
+    <p>Для зміни введіть власника</p>
 
     <label for="editOwner">Owner</label>
     <input name="editOwner" type="text" id="editOwner">
@@ -35,17 +35,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["editOwner"])) {
             <button type="submit">Save Changes</button>
         </form>
         <?php
-    } else {
-        $error_message =  "Employee not found with code: $editOwner";
     }
 }
 
 
-function findAnEmployeeByCode($array, $phone_number)
+function findAnEmployeeByCode($array, $owner)
 {
     foreach ($array as $employee) {
 
-        if (isset($employee['phone_number']) && $employee['phone_number'] == $phone_number) {
+        if (isset($employee['owner']) && $employee['owner'] == $owner) {
             return $employee;
         }
     }

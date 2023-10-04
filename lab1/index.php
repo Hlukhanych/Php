@@ -62,6 +62,25 @@ $abonents = [
     ]
 ];
 
+function save() {
+    global $abonents;
+    $json_abonents = json_encode($abonents);
+    file_put_contents('data.json', $json_abonents);
+}
+function load() {
+    global $abonents;
+    $json = file_get_contents('data.json');
+    $json_data = json_decode($json,true);
+    $abonents = $json_data;
+}
+
+if(array_key_exists('save', $_POST)) {
+    save();
+}
+else if(array_key_exists('load', $_POST)) {
+    load();
+}
+
 if (isset($_POST['phone_number'])) {
     $abonents[] = [
         'phone_number' => $_POST['phone_number'] ?? '',
@@ -83,10 +102,10 @@ $abonents = array_filter($abonents, function ($element) {
     return $return_flag;
 });
 
-if(isset($_POST['editPhoneNumber'])){
+if(isset($_POST['editOwner'])){
     $editKey = null;
     foreach($abonents as $key => $value){
-        if ($value['phone_number'] == $_POST['editPhoneNumber']){
+        if ($value['owner'] == $_POST['editOwner']){
             $editKey = $key;
             break;
         }
@@ -108,8 +127,6 @@ if(isset($_POST['editPhoneNumber'])){
 include 'abonents_table.phtml';
 include 'abonent_form_create.phtml';
 include 'abonent_change.phtml';
+include 'buttons.phtml';
 
-
-if ($error_message ){
-    print $error_message;
-}
+?>
