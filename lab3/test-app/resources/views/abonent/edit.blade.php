@@ -2,6 +2,7 @@
 <br /><br />
 <form action="/abonent/{{$abonent->id}}" method="POST">
     @csrf
+    @method('PUT')
     <label id="phone_number">Phone number</label>
     <input required id="phone_number" type="text" name="phone_number" placeholder="Number" value="{{$abonent->phone_number}}">
     <br />
