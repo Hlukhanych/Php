@@ -30,5 +30,6 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-
-Route::resource('abonent', \App\Http\Controllers\AbonentController::class);
+Route::middleware(['auth'])->group(function () {
+    Route::resource('abonent', \App\Http\Controllers\AbonentController::class);
+});

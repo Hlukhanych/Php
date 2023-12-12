@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use App\Models\Abonent;
+use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,24 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->registerPolicies();
+
+        Gate::define('viewAny-resource', function ($user) {
+            return true;
+        });
+
+        Gate::define('create-resource', function ($user) {
+            return true;
+        });
+
+        Gate::define('edit-abonent', function (User $user, $abonent) {
+            if($user->role === "editor"||$user->role === "superadmin") return true;
+            return $user->id === $abonent->creator_user_id;
+        });
+
+        Gate::define('delete-abonent', function (User $user, $abonent) {
+            if($user->role === "superadmin") return true;
+            return $user->id === $abonent->creator_user_id;
+        });
     }
 }
