@@ -3,26 +3,34 @@
 namespace App\Http\Controllers;
 
 use App\Models\Abonent;
+use Illuminate\Auth\Access\AuthorizationException;
+//use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Gate;
 
 class AbonentController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * @throws AuthorizationException
      */
     public function index() : View
     {
+        $this->authorize('viewAny-resource');
         $abonent = Abonent::all();
         return view('abonent.index', ['abonent' => $abonent]);
     }
 
     /**
      * Show the form for creating a new resource.
+     * @throws AuthorizationException
      */
     public function create() : View
     {
+        $this->authorize('create-resource');
         return view('abonent.create');
     }
 
@@ -31,7 +39,8 @@ class AbonentController extends Controller
      */
     public function store(Request $request) : RedirectResponse
     {
-        $data = $request->only(['phone_number', 'address', 'owner', 'sum', 'account']);
+        $user = Auth::user();
+        $data = array_merge($request->only(['phone_number', 'address', 'owner', 'sum', 'account']), ['creator_user_id' => $user->id]);
         Abonent::create($data);
         return redirect(route('abonent.index'));
     }
@@ -50,8 +59,14 @@ class AbonentController extends Controller
      */
     public function edit($id)
     {
+        $user = Auth::user();
         $abonent = Abonent::findOrFail($id);
-        return view('abonent.edit', ['abonent' => $abonent]);
+        if(Gate::forUser($user)->allows('edit-abonent', $abonent)){
+            return view('abonent.edit', ['abonent' => $abonent]);
+        }
+        else{
+            abort(403);
+        }
     }
 
     /**
@@ -72,8 +87,13 @@ class AbonentController extends Controller
      */
     public function destroy($id)
     {
+        $user = Auth::user();
         $abonent = Abonent::findOrFail($id);
-        $abonent->delete();
-        return redirect('/abonent')->with('success', 'Abonent deleted successfully!');
+        if(Gate::forUser($user)->allows('delete-abonent', $abonent)){
+            $abonent->delete();
+            return redirect('/abonent')->with('success', 'Abonent deleted successfully!');
+        }else{
+            abort(403);
+        }
     }
 }
